@@ -26,6 +26,7 @@ function _createCase(params, proxy) {
         })
         .catch(error => {
             logger.info(`Error creating case: ${util.inspect(error)}`);
+            throw error;
         });
 }
 
