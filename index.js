@@ -1,4 +1,3 @@
-const fs = require('fs');
 const util = require('util');
 const url = require('url');
 const request = require('request-promise-native');
@@ -15,11 +14,7 @@ const createDnCase =  (params, proxy) => {
 };
 
 function _createCase(params, proxy) {
-    return _readFile(params.caseDataFilePath, 'utf8')
-        .then(caseData => {
-            const caseDataJson = JSON.parse(caseData);
-            return _createCaseForUser(params, caseDataJson, proxy);
-        })
+    return _createCaseForUser(params, proxy)
         .then((createCaseResponse) => {
             logger.info(`Created case ${createCaseResponse.id}`);
             return _updateCase(params, createCaseResponse.id, params.eventId, proxy);
@@ -30,15 +25,7 @@ function _createCase(params, proxy) {
         });
 }
 
-const _readFile = (fileName, type) => {
-    return new Promise(((resolve, reject) => {
-        fs.readFile(fileName, type, (error, content) => {
-            error ? reject(error) : resolve(content);
-        });
-    }));
-};
-
-const _createCaseForUser = (params, caseData, proxy) => {
+const _createCaseForUser = (params, proxy) => {
     const uri = `${params.baseUrl}/casemaintenance/version/1/submit`;
     const headers = {
         Authorization: `Bearer ${params.authToken}`,
@@ -48,7 +35,7 @@ const _createCaseForUser = (params, caseData, proxy) => {
     const options = {
         uri,
         headers,
-        body: caseData,
+        body: params.caseData,
         json: true
     };
 
