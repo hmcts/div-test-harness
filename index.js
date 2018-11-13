@@ -4,25 +4,30 @@ const url = require('url');
 const request = require('request-promise-native');
 const logger = require('@hmcts/nodejs-logging').Logger.getLogger(__filename);
 
-const createAosCase =  params => {
-
+const createAosCase =  (params, proxy) => {
+    params.eventId = 'testAosAwaiting';
+    return _createCase(params, proxy);
 };
 
 const createDnCase =  (params, proxy) => {
-    return _readFile(params.caseDataFilePath, 'utf8')
-      .then(caseData => {
-        const caseDataJson = JSON.parse(caseData);
-        return _createCaseForUser(params, caseDataJson, proxy);
-      })
-      .then((createCaseResponse) => {
-        logger.info(`Created case ${createCaseResponse.id}`);
-        const eventId = 'testAwaitingDecreeNisi';
-        return _updateCase(params, createCaseResponse.id, eventId, proxy);
-      })
-      .catch(error => {
-        logger.info(`Error creating case: ${util.inspect(error)}`);
-      });
+    params.eventId = 'testAwaitingDecreeNisi';
+    return _createCase(params, proxy);
 };
+
+function _createCase(params, proxy) {
+    return _readFile(params.caseDataFilePath, 'utf8')
+        .then(caseData => {
+            const caseDataJson = JSON.parse(caseData);
+            return _createCaseForUser(params, caseDataJson, proxy);
+        })
+        .then((createCaseResponse) => {
+            logger.info(`Created case ${createCaseResponse.id}`);
+            return _updateCase(params, createCaseResponse.id, params.eventId, proxy);
+        })
+        .catch(error => {
+            logger.info(`Error creating case: ${util.inspect(error)}`);
+        });
+}
 
 const _readFile = (fileName, type) => {
     return new Promise(((resolve, reject) => {
@@ -95,5 +100,6 @@ const _setupProxy = proxy  => {
 
 
 module.exports = {
+    createAosCase,
     createDnCase
 };
