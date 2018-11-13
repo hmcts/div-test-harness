@@ -1,5 +1,6 @@
 const fs = require('fs');
 const util = require('util');
+const url = require('url');
 const request = require('request-promise-native');
 const logger = require('@hmcts/nodejs-logging').Logger.getLogger(__filename);
 
@@ -29,7 +30,7 @@ const _readFile = (fileName, type) => {
             error ? reject(error) : resolve(content);
         });
     }));
-}
+};
 
 const _createCaseForUser = (params, caseData, proxy) => {
     const uri = `${params.baseUrl}/casemaintenance/version/1/submit`;
@@ -68,7 +69,7 @@ const _updateCase = (params, caseId, eventId, proxy) => {
     };
 
     if (proxy) {
-        Object.assign(options, this._setupProxy(proxy));
+        Object.assign(options, _setupProxy(proxy));
     }
     return request.post(options);
 };
@@ -95,4 +96,4 @@ const _setupProxy = proxy  => {
 
 module.exports = {
     createDnCase
-}
+};

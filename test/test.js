@@ -7,11 +7,11 @@ describe('index.js', function () {
     beforeEach(function() {
         sinon.stub(request, 'post').returns({id: '123'});
       });
-    
+
       afterEach(function() {
         request.post.restore();
       });
-    
+
     it('should create a DN case', function (done) {
 
         const proxy = '';
@@ -19,8 +19,8 @@ describe('index.js', function () {
             baseUrl: 'http://localhost:300',
             authToken: '',
             caseDataFilePath: 'test/test.json'
-        }
-        
+        };
+
         divTestHarness.createDnCase(params, proxy)
         .then(() => {
             expect(request.post.callCount).to.equal(2);
