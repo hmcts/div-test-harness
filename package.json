@@ -17,13 +17,13 @@
   },
   "homepage": "https://github.com/hmcts/div-test-harness#readme",
   "devDependencies": {
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "chai": "^4.2.0",
+    "sinon": "^7.1.1"
   },
   "dependencies": {
     "@hmcts/nodejs-logging": "^3.0.0",
-    "chai": "^4.2.0",
     "request": "^2.88.0",
-    "request-promise-native": "^1.0.5",
-    "sinon": "^7.1.1"
+    "request-promise-native": "^1.0.5"
   }
 }
