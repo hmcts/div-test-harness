@@ -3,19 +3,19 @@ const url = require('url');
 const request = require('request-promise-native');
 const logger = require('@hmcts/nodejs-logging').Logger.getLogger(__filename);
 
-const createAosCase =  (params, proxy) => {
+const createAosCase = (params, proxy) => {
     params.eventId = 'testAosAwaiting';
     return _createCase(params, proxy);
 };
 
-const createDnCase =  (params, proxy) => {
+const createDnCase = (params, proxy) => {
     params.eventId = 'testAwaitingDecreeNisi';
     return _createCase(params, proxy);
 };
 
 function _createCase(params, proxy) {
     return _createCaseForUser(params, proxy)
-        .then((createCaseResponse) => {
+        .then(createCaseResponse => {
             logger.info(`Created case ${createCaseResponse.id}`);
             return _updateCase(params, createCaseResponse.id, params.eventId, proxy);
         })
@@ -25,7 +25,7 @@ function _createCase(params, proxy) {
         });
 }
 
-const _createCaseForUser = (params, proxy) => {
+function _createCaseForUser(params, proxy) {
     const uri = `${params.baseUrl}/casemaintenance/version/1/submit`;
     const headers = {
         Authorization: `Bearer ${params.authToken}`,
@@ -67,7 +67,7 @@ const _updateCase = (params, caseId, eventId, proxy) => {
     return request.post(options);
 };
 
-const _setupProxy = proxy  => {
+const _setupProxy = proxy => {
     const proxyUrl = url.parse(proxy);
 
     let proxyOptions = {};
