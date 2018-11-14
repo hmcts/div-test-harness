@@ -6,7 +6,7 @@ const divTestHarness = require('../index.js');
 
 describe('index.js', function () {
     beforeEach(function () {
-        sinon.stub(request, 'post').returns(Promise.resolve({ id: '123' }));
+        sinon.stub(request, 'post').resolves({ id: '123' });
     });
 
     afterEach(function () {
