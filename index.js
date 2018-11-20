@@ -1,29 +1,20 @@
-const util = require('util');
 const url = require('url');
 const request = require('request-promise-native');
 const logger = require('@hmcts/nodejs-logging').Logger.getLogger(__filename);
 
-const createAosCase = (params, proxy) => {
-    params.eventId = 'testAosAwaiting';
-    return _createCase(params, proxy);
+const createAosCase = async (params = { authToken: '', caseData: {}, baseUrl: '' }, proxy) => {
+    const createCaseResponse = await _createCaseForUser(params, proxy);
+    logger.log('** Case created **');
+    logger.log(createCaseResponse);
+    // await _updateCase(params, createCaseResponse.id, 'awaitingDocumentsFromAwaitingHWFDecision', proxy);
+    // await _updateCase(params, createCaseResponse.id, 'issueFromAwaitingDocs', proxy);
+    return _updateCase(params, createCaseResponse.id, 'testAwaitingAos', proxy);
 };
 
-const createDnCase = (params, proxy) => {
-    params.eventId = 'testAwaitingDecreeNisi';
-    return _createCase(params, proxy);
+const createDnCase = async (params, proxy) => {
+    const createCaseResponse = await _createCaseForUser(params, proxy);
+    return _updateCase(params, createCaseResponse.id, 'testAwaitingDecreeNisi', proxy);
 };
-
-function _createCase(params, proxy) {
-    return _createCaseForUser(params, proxy)
-        .then(createCaseResponse => {
-            logger.info(`Created case ${createCaseResponse.id}`);
-            return _updateCase(params, createCaseResponse.id, params.eventId, proxy);
-        })
-        .catch(error => {
-            logger.info(`Error creating case: ${util.inspect(error)}`);
-            throw error;
-        });
-}
 
 function _createCaseForUser(params, proxy) {
     const uri = `${params.baseUrl}/casemaintenance/version/1/submit`;
@@ -43,7 +34,7 @@ function _createCaseForUser(params, proxy) {
         Object.assign(options, _setupProxy(proxy));
     }
     return request.post(options);
-};
+}
 
 const _updateCase = (params, caseId, eventId, proxy) => {
     logger.info(`Issuing event ${eventId} against case ${caseId}.`);
