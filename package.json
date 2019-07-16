@@ -1,6 +1,6 @@
 {
   "name": "@hmcts/div-test-harness",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Module used for functional tests to create a case and progress it to a certain state so that other tests can build upon it",
   "main": "index.js",
   "scripts": {
