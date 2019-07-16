@@ -38,4 +38,17 @@ describe('index.js', function () {
                 expect(request.post.callCount).to.equal(2);
             });
     });
+
+    it('should create a DA case', function () {
+        const proxy = '';
+        const params = {
+            baseUrl: '',
+            authToken: '',
+            caseData: fs.readFileSync('test/test.json')
+        };
+        return divTestHarness.createDaCase(params, proxy)
+            .then(() => {
+                expect(request.post.callCount).to.equal(2);
+            });
+    });
 });

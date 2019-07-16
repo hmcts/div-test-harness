@@ -13,6 +13,11 @@ const createDnCase = (params, proxy) => {
     return _createCase(params, proxy);
 };
 
+const createDaCase = (params, proxy) => {
+    params.eventId = 'testAwaitingDecreeAbsolute';
+    return _createCase(params, proxy);
+};
+
 function _createCase(params, proxy) {
     return _createCaseForUser(params, proxy)
         .then(createCaseResponse => {
@@ -89,5 +94,6 @@ const _setupProxy = proxy => {
 
 module.exports = {
     createAosCase,
-    createDnCase
+    createDnCase,
+    createDaCase
 };
