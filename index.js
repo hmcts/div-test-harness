@@ -22,7 +22,7 @@ function _createCase(params, proxy) {
     return _createCaseForUser(params, proxy)
         .then(createCaseResponse => {
             logger.info(`Created case ${createCaseResponse.id}`);
-            return _updateCase(params, createCaseResponse.id, params.eventId, proxy);
+            return updateCase(params, createCaseResponse.id, params.eventId, proxy);
         })
         .catch(error => {
             logger.info(`Error creating case: ${util.inspect(error)}`);
@@ -30,27 +30,7 @@ function _createCase(params, proxy) {
         });
 }
 
-function _createCaseForUser(params, proxy) {
-    const uri = `${params.baseUrl}/casemaintenance/version/1/submit`;
-    const headers = {
-        Authorization: `Bearer ${params.authToken}`,
-        'Content-Type': 'application/json'
-    };
-
-    const options = {
-        uri,
-        headers,
-        body: params.caseData,
-        json: true
-    };
-
-    if (proxy) {
-        Object.assign(options, _setupProxy(proxy));
-    }
-    return request.post(options);
-};
-
-const _updateCase = (params, caseId, eventId, proxy) => {
+const updateCase = (params, caseId, eventId, proxy) => {
     logger.info(`Issuing event ${eventId} against case ${caseId}.`);
     const baseUrl = params.baseUrl;
     const uri = `${baseUrl}/casemaintenance/version/1/updateCase/${caseId}/${eventId}`;
@@ -63,6 +43,26 @@ const _updateCase = (params, caseId, eventId, proxy) => {
         uri,
         headers,
         body: {},
+        json: true
+    };
+
+    if (proxy) {
+        Object.assign(options, _setupProxy(proxy));
+    }
+    return request.post(options);
+};
+
+function _createCaseForUser(params, proxy) {
+    const uri = `${params.baseUrl}/casemaintenance/version/1/submit`;
+    const headers = {
+        Authorization: `Bearer ${params.authToken}`,
+        'Content-Type': 'application/json'
+    };
+
+    const options = {
+        uri,
+        headers,
+        body: params.caseData,
         json: true
     };
 
@@ -95,5 +95,6 @@ const _setupProxy = proxy => {
 module.exports = {
     createAosCase,
     createDnCase,
-    createDaCase
+    createDaCase,
+    updateCase
 };
