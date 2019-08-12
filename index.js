@@ -18,6 +18,11 @@ const createDaCase = (params, proxy) => {
     return _createCase(params, proxy);
 };
 
+const createDaCaseInDaRequested = (params, proxy) => {
+    params.eventId = 'testRequestDa';
+    return _createCase(params, proxy)
+};
+
 function _createCase(params, proxy) {
     return _createCaseForUser(params, proxy)
         .then(createCaseResponse => {
@@ -95,5 +100,6 @@ const _setupProxy = proxy => {
 module.exports = {
     createAosCase,
     createDnCase,
-    createDaCase
+    createDaCase,
+    createDaCaseInDaRequested
 };
