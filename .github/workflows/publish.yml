@@ -23,34 +23,30 @@ jobs:
       - run: yarn test
 
   publish-npm:
+    if: startsWith(github.ref, 'refs/tags')
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-        if: startsWith(github.ref, 'refs/tags')
       - uses: actions/setup-node@v1
-        if: startsWith(github.ref, 'refs/tags')
         with:
           node-version: 10
           registry-url: https://registry.npmjs.org/
       - run: yarn publish
-        if: startsWith(github.ref, 'refs/tags')
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-gpr:
+    if: startsWith(github.ref, 'refs/tags')
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-        if: startsWith(github.ref, 'refs/tags')
       - uses: actions/setup-node@v1
-        if: startsWith(github.ref, 'refs/tags')
         with:
           node-version: 10
           registry-url: https://npm.pkg.github.com/
           scope: '@hmcts'
       - run: yarn publish
-        if: startsWith(github.ref, 'refs/tags')
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
